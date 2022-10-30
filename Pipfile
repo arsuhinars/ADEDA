@@ -8,6 +8,9 @@ fastapi = "*"
 uvicorn = {extras = ["standart"], version = "*"}
 starlette = "*"
 celery = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
+pydantic = "*"
 
 [dev-packages]
 
