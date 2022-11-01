@@ -1,10 +1,9 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 from datetime import datetime, timedelta
 
-from config import CACHE_SETTINGS
+from .config import CACHE_SETTINGS
 
-@dataclass
-class __CacheRecord:
+class __CacheRecord(BaseModel):
     value: any
     expires: datetime
 
@@ -14,8 +13,8 @@ def get(key: str, default: any = None):
     """ 
     Получить значение кэша по его ключу
     
-    * key - ключ кэша
-    * default - значение, возвращаемое, если значения с заданным ключом не
+    * `key` - ключ кэша
+    * `default` - значение, возвращаемое, если значения с заданным ключом не
     существует
     """
     if key in __memcache and __memcache[key].timeout < datetime.now():
@@ -31,9 +30,9 @@ def set(
     """
     Изменить значения кэша по его ключу
 
-    * key - ключ кэша
-    * value - значение, которое будет записано в кэш
-    * timeout - время, через которое запись станет неактивной,
+    * `key` - ключ кэша
+    * `value` - значение, которое будет записано в кэш
+    * `timeout` - время, через которое запись станет неактивной,
     по стандарту - время, указанное в `config.py`. Если указан `None`, то запись
     будет существовать вечно
     """
@@ -51,9 +50,9 @@ def get_or_set(
     Получить значения кэша. Если его не существует, то создать и записать
     заданное значение.
 
-    * key - ключ кэша
-    * default - значение, которое будет записано, если кэша не существует
-    * timeout - время, через которое запись станет неактивной.
+    * `key` - ключ кэша
+    * `default` - значение, которое будет записано, если кэша не существует
+    * `timeout` - время, через которое запись станет неактивной.
     Подробнее в `set`
     """
     if key in __memcache and __memcache[key].timeout < datetime.now():
