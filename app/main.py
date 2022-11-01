@@ -55,14 +55,16 @@ def validation_exception_handler(request: Request, err: RequestValidationError):
     )
 
 
-# Импортируем модуль для регулярных задач
-from app.tasks import repated_tasks
+from app.internal import webdriver_helper
 
 @app.on_event('startup')
-async def on_server_starts():
-    """ Запускаем повторяемые задачи при запуске сервера """
-    for task in repated_tasks:
-        await task()
+def on_start():
+    webdriver_helper.on_start()
+
+
+@app.on_event('shutdown')
+def on_shutdown():
+    webdriver_helper.on_end()
 
 
 import uvicorn
