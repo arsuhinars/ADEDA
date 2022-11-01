@@ -8,7 +8,7 @@ from jose import jwt, JWTError
 
 from ..schemas import UserCreate
 from ..models import User
-import app.config as config
+from app import config
 
 def hash_password(password: str, salt: bytes):
     """ Метод генерации ключа для пароля с помощью соли """

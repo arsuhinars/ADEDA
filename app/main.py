@@ -8,7 +8,8 @@ from .db import SessionLocal, engine
 from .models import Base, User
 from .schemas import UserCreate
 from .internal.auth import create_user
-import app.config as config
+from app import config
+
 
 # Генерируем таблицы для моделей
 Base.metadata.create_all(bind=engine)
