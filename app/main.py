@@ -63,3 +63,8 @@ async def on_server_starts():
     for task in repated_tasks:
         await task()
 
+
+import uvicorn
+
+if __name__ == '__main__':
+    uvicorn.run(app)
