@@ -1,7 +1,5 @@
-import asyncio
-
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.exceptions import RequestValidationError
 
 from .db import SessionLocal, engine
@@ -25,12 +23,21 @@ if config.ADMIN_LOGIN and config.ADMIN_PASSWORD:
             ), session)
         session.commit()
 
+
 app = FastAPI()
+
 
 # Добавляем пути
 from .routes.auth import router as auth_router
+from .routes.search import router as search_router
 
 app.include_router(auth_router)
+app.include_router(search_router)
+
+@app.get('/ping')
+def ping():
+    return PlainTextResponse('pong')
+
 
 # Добавляем обработчики ошибок
 from .internal.errors import AppException
