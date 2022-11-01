@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -50,4 +52,14 @@ def validation_exception_handler(request: Request, err: RequestValidationError):
             error_verbose=str(err)
         ).dict(exclude_none=True)
     )
+
+
+# Импортируем модуль для регулярных задач
+from app.tasks import repated_tasks
+
+@app.on_event('startup')
+async def on_server_starts():
+    """ Запускаем повторяемые задачи при запуске сервера """
+    for task in repated_tasks:
+        await task()
 
