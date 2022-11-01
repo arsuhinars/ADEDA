@@ -7,10 +7,11 @@ name = "pypi"
 fastapi = "*"
 uvicorn = {extras = ["standart"], version = "*"}
 starlette = "*"
-celery = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 pydantic = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+geoalchemy2 = "*"
 
 [dev-packages]
 
