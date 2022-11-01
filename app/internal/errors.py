@@ -1,4 +1,16 @@
 
+class ParseError(Exception):
+    """ Класс ошибки парсинга """
+    def __init__(self, message: str, source: str):
+        """
+        Конструктор исключения
+
+        * `message` - сообщение, содержащее информацию об ошибке
+        * `source` - источник ошибки
+        """
+        super().__init__(f'Parse error "{message}" on {source}')
+
+
 class AppException(Exception):
     """ Базовый внутренний класс для HTTP ошибок """
     def __init__(self, message: str, status_code: int):
@@ -10,6 +22,8 @@ class AppException(Exception):
         """
         self.message = message
         self.status_code = status_code
+
+        super().__init__(message)
 
 
 class UnauthorizedException(AppException):
