@@ -13,3 +13,10 @@ CACHE_SETTINGS = {
 }
 
 PASSWORD_SALT_LENGTH = 16
+
+PARSE_DELAY = 10
+PARSER_BROWSER = 'firefox'
+WEBDRIVER_OPTIONS = {
+    'headless': False,
+    'page_load_strategy': 'eager',
+}
