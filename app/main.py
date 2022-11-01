@@ -1,15 +1,33 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 from .db import SessionLocal, engine
 from .models import Base, User
+from .schemas import UserCreate
+from .internal.auth import create_user
+import app.config as config
 
 # Генерируем таблицы для моделей
 Base.metadata.create_all(bind=engine)
 
+# Автоматически создаем аккаунт администратора
+if config.ADMIN_LOGIN and config.ADMIN_PASSWORD:
+    with SessionLocal() as session:
+        if session.query(User).filter(User.is_admin == True).count() == 0:
+            create_user(UserCreate(
+                login = config.ADMIN_LOGIN,
+                password = config.ADMIN_PASSWORD,
+                is_admin = True
+            ), session)
+        session.commit()
+
 app = FastAPI()
 
+# Добавляем пути
+from .routes.auth import router as auth_router
+
+app.include_router(auth_router)
 
 # Добавляем обработчики ошибок
 from .internal.errors import AppException
