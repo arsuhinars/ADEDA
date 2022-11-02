@@ -1,4 +1,4 @@
-from ..schemas import House
+from ..schemas import HouseBase
 
 class Parser:
     """
@@ -9,8 +9,13 @@ class Parser:
         """ Метод начала работы с парсером. Должен обязательно быть вызван """
         raise NotImplementedError()
 
-    async def parse_next(self) -> House:
-        """ Метод парсинга следующего дома """
+    async def parse_next(self) -> HouseBase:
+        """
+        Метод парсинга следующего дома
+        
+        Гарантированно вызывает только исключение `ParseError` при возникновении
+        ошибки парсинга
+        """
         raise NotImplementedError()
 
     async def end(self):
