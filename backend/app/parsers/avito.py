@@ -14,7 +14,7 @@ AVITO_BASE_URL = 'https://www.avito.ru/moskva/kvartiry/prodam'
 
 SELECTORS = {
     'CAPCHA_LABEL': './/h2[contains(@class, "firewall-title")]',
-    'FLAT_LINKS': './/*[contains(@class, "iva-item-root-_lk9K")]//*[contains(@class, "iva-item-titleStep-pdebR")]//a',
+    'FLAT_LINKS': './/div[@data-marker="catalog-serp"]//*[contains(@class, "iva-item-root-_lk9K")]//*[contains(@class, "iva-item-titleStep-pdebR")]//a',
     'NEXT_PAGE_BTN': './/span[contains(@class, "pagination-item-JJq_j") and contains(., "След")]',
 
     'LOCATION': './/span[contains(@class, "style-item-address__string-wt61A")]',
