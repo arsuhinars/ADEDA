@@ -56,8 +56,8 @@ class HouseBase(BaseModel):
     url: str
 
 
-class HouseResponse(BaseModel):
-    """ Модель дома, возвращаемая при парсинге """
+class HouseBrief(BaseModel):
+    """ Краткое описание дома/квартиры. Используется в импортируемой таблице """
     location: str
     rooms_count: int
     segment: HouseSegment
@@ -69,6 +69,29 @@ class HouseResponse(BaseModel):
     material: HouseMaterial
     state: HouseState
     metro_distance: float
+
+
+class HouseAdjustmentsCheckList(BaseModel):
+    """
+    Чек-лест выбранных корректировок
+    
+    Подробнее про корректировки в `HouseAnalogAdjustments`
+    """
+    trade: bool
+    area: bool
+    metro: bool
+    floor: bool
+    room_count: bool
+    kitchen_area: bool
+    balcony: bool
+    repairs: bool
+
+
+class HouseRequest(BaseModel):
+    """ Модель запроса для поиска аналогов """
+
+    house: HouseBrief
+    adjustments: HouseAdjustmentsCheckList
 
 
 class HouseAnalogAdjustments(BaseModel):
@@ -90,24 +113,3 @@ class HouseAnalogAdjustments(BaseModel):
         return abs(self.trade) + abs(self.area) + abs(self.metro) + \
             abs(self.floor) + abs(self.room_count) + abs(self.kitchen_area) + \
             abs(self.balcony) + abs(self.repairs)
-
-
-class HouseAnalog(BaseModel):
-    """ Модель вычисленного дома-аналога """
-    source_service: SourceService
-    url: str
-
-    location: str
-    rooms_count: int
-    segment: HouseSegment
-    floor: int
-    floors_count: int
-    flat_area: float
-    kitchen_area: float
-    has_balcony: bool
-    material: HouseMaterial
-    state: HouseState
-    metro_distance: float
-
-    adjustments: HouseAnalogAdjustments
-    origin_price: float
