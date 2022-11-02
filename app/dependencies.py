@@ -1,4 +1,4 @@
-from fastapi import Header, Depends
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from .internal import auth
@@ -19,14 +19,14 @@ def get_db_session():
 
 
 def get_current_user(
-    x_token: str = Header(''),
+    token: str,
     session: Session = Depends(get_db_session)
     ):
     """
     Зависимость для получения текущего авторизованного пользователя.
     Если пользователь не авторизован, то возвращает `None`
     """
-    return auth.get_user_by_token(x_token, session)
+    return auth.get_user_by_token(token, session)
 
 
 def check_and_get_user(user: User = Depends(get_current_user)):
@@ -39,7 +39,7 @@ def check_and_get_user(user: User = Depends(get_current_user)):
     return user
 
 
-def check_authorization(x_token: str = Header('')):
+def check_authorization(token: str):
     """ Зависимость для проверки авторизации пользователя """
-    if not auth.verify_user_token(x_token):
+    if not auth.verify_user_token(token):
         raise UnauthorizedError()
