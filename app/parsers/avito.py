@@ -7,6 +7,7 @@ from . import Parser
 from ..schemas import House, HouseSegment, HouseMaterial, HouseState, \
     SourceService
 from ..internal.webdriver_helper import WebdriverHelper
+from ..internal.errors import ParseError
 from app import config
 
 AVITO_BASE_URL = 'https://www.avito.ru/moskva/kvartiry/prodam'

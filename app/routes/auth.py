@@ -5,16 +5,20 @@ from sqlalchemy.orm import Session
 from ..dependencies import get_db_session, check_and_get_user
 from ..internal.auth import authenticate_user, create_jwt_token
 from ..internal.auth import create_user as auth_create_user
-from ..internal.errors import AppException, ForbiddenException
+from ..internal.errors import AppError, ForbiddenError
 from ..models import User
-from ..schemas import UserCreate
+from ..schemas import UserCreate, TokenResponse
 
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
 
-@router.get('/get_token', summary='Авторизоваться и получить токен')
+@router.get(
+    '/get_token',
+    response_model=TokenResponse,
+    summary='Авторизоваться и получить токен'
+    )
 def get_token(
     login: str,
     password: str,
@@ -31,7 +35,7 @@ def get_token(
     """
     user = authenticate_user(login, password, session)
     if not user:
-        raise AppException('User does not exist', 400)
+        raise AppError('User does not exist', 400)
     return JSONResponse({'token': create_jwt_token(user)})
 
 
@@ -50,6 +54,6 @@ def create_user(
     `login`, `password`, `is_admin`(опционально) 
     """
     if not user.is_admin:
-        raise ForbiddenException()
+        raise ForbiddenError()
     auth_create_user(user_create, session)
     return JSONResponse({})
