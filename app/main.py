@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 
 from .db import SessionLocal, engine
@@ -27,41 +26,23 @@ if config.ADMIN_LOGIN and config.ADMIN_PASSWORD:
 app = FastAPI()
 
 
-# Добавляем пути
+# Добавляем обработчики путей
 from .routes.auth import router as auth_router
-from .routes.search import router as search_router
+from .routes.table import router as table_router
 
 app.include_router(auth_router)
-app.include_router(search_router)
-
-@app.get('/ping')
-def ping():
-    return PlainTextResponse('pong')
+app.include_router(table_router)
 
 
 # Добавляем обработчики ошибок
-from .internal.errors import AppException
-from .schemas import ErrorResponse
+from .internal.errors import *
 
-@app.exception_handler(AppException)
-def app_exception_handler(request: Request, err: AppException):
-    return JSONResponse(
-        status_code=err.status_code,
-        content=ErrorResponse(error=err.message).dict(exclude_none=True)
-    )
+app.exception_handler(AppError)(app_exception_handler)
+app.exception_handler(HTTPException)(http_exception_handler)
+app.exception_handler(RequestValidationError)(validation_exception_handler)
 
 
-@app.exception_handler(RequestValidationError)
-def validation_exception_handler(request: Request, err: RequestValidationError):
-    return JSONResponse(
-        status_code=400,
-        content=ErrorResponse(
-            error='Validation error',
-            error_verbose=str(err)
-        ).dict(exclude_none=True)
-    )
-
-
+# Добавляем обработчики событий запуска и выключения сервера
 from app.internal import webdriver_helper
 
 @app.on_event('startup')
