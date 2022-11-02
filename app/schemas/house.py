@@ -35,24 +35,18 @@ class SourceService(enum.Enum):
     CIAN = 'cian'
 
 
-class House(BaseModel):
+class HouseBase(BaseModel):
     """ Модель дома/квартиры """
     location: str
-
     rooms_count: int
     segment: HouseSegment
-
     floor: int
     floors_count: int
-
     flat_area: float
     kitchen_area: float
-
     has_balcony: bool
-
     material: HouseMaterial
     state: HouseState
-
     metro_station: str
     metro_distance: float
 
@@ -60,6 +54,21 @@ class House(BaseModel):
 
     source_service: SourceService
     url: str
+
+
+class HouseResponse(BaseModel):
+    """ Модель дома, возвращаемая при парсинге """
+    location: str
+    rooms_count: int
+    segment: HouseSegment
+    floor: int
+    floors_count: int
+    flat_area: float
+    kitchen_area: float
+    has_balcony: bool
+    material: HouseMaterial
+    state: HouseState
+    metro_distance: float
 
 
 class HouseAnalogAdjustments(BaseModel):
@@ -81,3 +90,24 @@ class HouseAnalogAdjustments(BaseModel):
         return abs(self.trade) + abs(self.area) + abs(self.metro) + \
             abs(self.floor) + abs(self.room_count) + abs(self.kitchen_area) + \
             abs(self.balcony) + abs(self.repairs)
+
+
+class HouseAnalog(BaseModel):
+    """ Модель вычисленного дома-аналога """
+    source_service: SourceService
+    url: str
+
+    location: str
+    rooms_count: int
+    segment: HouseSegment
+    floor: int
+    floors_count: int
+    flat_area: float
+    kitchen_area: float
+    has_balcony: bool
+    material: HouseMaterial
+    state: HouseState
+    metro_distance: float
+
+    adjustments: HouseAnalogAdjustments
+    origin_price: float

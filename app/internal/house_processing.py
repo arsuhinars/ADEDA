@@ -1,8 +1,8 @@
-from ..schemas import House, HouseAnalogAdjustments
+from ..schemas import HouseBase, HouseAnalogAdjustments
 
 def calculate_adjustments(
-    reference: House,
-    analog: House
+    reference: HouseBase,
+    analog: HouseBase
     ) -> HouseAnalogAdjustments:
     """
     Функция вычисления корректировок для аналога и эталона
