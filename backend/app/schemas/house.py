@@ -92,6 +92,7 @@ class HouseRequest(BaseModel):
 
     house: HouseBrief
     adjustments: HouseAdjustmentsCheckList
+    max_house_count: int
 
 
 class HouseAnalogAdjustments(BaseModel):
