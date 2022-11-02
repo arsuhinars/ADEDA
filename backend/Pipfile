@@ -13,6 +13,8 @@ pydantic = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 selenium = "*"
 webdriver-manager = "*"
+openpyxl = "*"
+python-multipart = "*"
 
 [dev-packages]
 
