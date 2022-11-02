@@ -37,9 +37,9 @@ app.include_router(table_router)
 # Добавляем обработчики ошибок
 from .internal.errors import *
 
-app.exception_handler(AppError)(app_exception_handler)
-app.exception_handler(HTTPException)(http_exception_handler)
-app.exception_handler(RequestValidationError)(validation_exception_handler)
+app.add_exception_handler(AppError, app_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 
 # Добавляем обработчики событий запуска и выключения сервера
