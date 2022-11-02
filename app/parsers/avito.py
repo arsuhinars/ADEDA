@@ -4,7 +4,7 @@ import re
 from selenium.webdriver.common.by import By
 
 from . import Parser
-from ..schemas import House, HouseSegment, HouseMaterial, HouseState, \
+from ..schemas import HouseBase, HouseSegment, HouseMaterial, HouseState, \
     SourceService
 from ..internal.webdriver_helper import WebdriverHelper
 from ..internal.errors import ParseError
@@ -56,142 +56,147 @@ class AvitoParser(Parser):
         self.helper.driver.get(AVITO_BASE_URL)
         self.flat_iter = iter(self.get_flats_links())
 
-    async def parse_next(self) -> House:
+    async def parse_next(self) -> HouseBase:
         await asyncio.sleep(config.PARSE_DELAY)
 
         try:
-            # Пытаемся получить ссылку на следующую квартиру
-            link = next(self.flat_iter)
-        except StopIteration:
-            # Если список закончился
-            self.helper.driver.switch_to.window(
-                self.main_win_handle
-            )
-            # Переходим на следующую страницу
-            self.helper.driver.find_element(
-                By.XPATH, SELECTORS['NEXT_PAGE_BTN']
-            ).click()
-            # Проверяем капчу
+            try:
+                # Пытаемся получить ссылку на следующую квартиру
+                link = next(self.flat_iter)
+            except StopIteration:
+                # Если список закончился
+                self.helper.driver.switch_to.window(
+                    self.main_win_handle
+                )
+                # Переходим на следующую страницу
+                self.helper.driver.find_element(
+                    By.XPATH, SELECTORS['NEXT_PAGE_BTN']
+                ).click()
+                # Проверяем капчу
+                if self.check_capcha():
+                    raise ParseError('Capcha required')
+                # Получаем список квартир
+                self.flat_iter = iter(self.get_flats_links())
+                
+                link = next(self.flat_iter)
+                await asyncio.sleep(config.PARSE_DELAY)
+            
+            # Открываем страницу след. квартиры
+            self.helper.driver.switch_to.new_window()
+            self.helper.driver.get(link)
             if self.check_capcha():
-                return None
-            # Получаем список квартир
-            self.flat_iter = iter(self.get_flats_links())
-            
-            link = next(self.flat_iter)
-            await asyncio.sleep(config.PARSE_DELAY)
-        
-        # Открываем страницу след. квартиры
-        self.helper.driver.switch_to.new_window()
-        self.helper.driver.get(link)
-        if self.check_capcha():
-            return None
+                raise ParseError('Capcha required')
 
-        try:
-            # Адрес
-            location = self.helper.get_element_text(SELECTORS['LOCATION'])
+            try:
+                # Адрес
+                location = self.helper.get_element_text(SELECTORS['LOCATION'])
 
-            # Кол-во комнат
-            rooms_count_str = ROOMS_COUNT_REGEX.match(
-                self.helper.get_element_text(SELECTORS['ROOMS_COUNT'])
-            ).group(1)
-            if rooms_count_str.lower() == 'студия':
-                rooms_count = 1
-            else:
-                try:
-                    rooms_count = int(rooms_count_str)
-                except ValueError:
-                    raise RuntimeError('Unable to parse rooms count')
-            
-            # Сегмент дома
-            build_year_str = self.helper.get_element_text(SELECTORS['BUILD_YEAR'])
-            if build_year_str is not None:
-                build_year = int(BUILD_YEAR_REGEX.match(build_year_str).group(1))
-                if build_year < 1917:
-                    segment = HouseSegment.OLD
+                # Кол-во комнат
+                rooms_count_str = ROOMS_COUNT_REGEX.match(
+                    self.helper.get_element_text(SELECTORS['ROOMS_COUNT'])
+                ).group(1)
+                if rooms_count_str.lower() == 'студия':
+                    rooms_count = 1
                 else:
-                    segment = HouseSegment.NEW
-            else:
-                if self.helper.has_element(SELECTORS['COMPLETION_DATE']):
-                    segment = HouseSegment.MODERN
+                    try:
+                        rooms_count = int(rooms_count_str)
+                    except ValueError:
+                        raise ParseError('Unable to parse rooms count', link)
+                
+                # Сегмент дома
+                build_year_str = self.helper.get_element_text(SELECTORS['BUILD_YEAR'])
+                if build_year_str is not None:
+                    build_year = int(BUILD_YEAR_REGEX.match(build_year_str).group(1))
+                    if build_year < 1917:
+                        segment = HouseSegment.OLD
+                    else:
+                        segment = HouseSegment.NEW
                 else:
-                    raise RuntimeError('Unable to parse house segment')
+                    if self.helper.has_element(SELECTORS['COMPLETION_DATE']):
+                        segment = HouseSegment.MODERN
+                    else:
+                        raise ParseError('Unable to parse house segment', link)
 
-            # Этаж и кол-во этажей
-            floor_match = FLOOR_REGEX.match(
-                self.helper.get_element_text(SELECTORS['FLOOR'])
-            )
-            floor = int(floor_match.group(1))
-            floors_count = int(floor_match.group(2))
+                # Этаж и кол-во этажей
+                floor_match = FLOOR_REGEX.match(
+                    self.helper.get_element_text(SELECTORS['FLOOR'])
+                )
+                floor = int(floor_match.group(1))
+                floors_count = int(floor_match.group(2))
 
-            # Материал стен
-            house_type = HOUSE_TYPE_REGEX.match(
-                self.helper.get_element_text(SELECTORS['HOUSE_TYPE'])
-            ).group(1)
-            match house_type.lower():
-                case 'кирпичный':
-                    material = HouseMaterial.BRICK
-                case 'монолитный' | 'монолитно-кирпичный':
-                    material = HouseMaterial.MONOLIT
-                case 'панельный' | 'блочный':
-                    material = HouseMaterial.PANEL
-                case _:
-                    raise RuntimeError('Unable to parse house type')
+                # Материал стен
+                house_type = HOUSE_TYPE_REGEX.match(
+                    self.helper.get_element_text(SELECTORS['HOUSE_TYPE'])
+                ).group(1)
+                match house_type.lower():
+                    case 'кирпичный':
+                        material = HouseMaterial.BRICK
+                    case 'монолитный' | 'монолитно-кирпичный':
+                        material = HouseMaterial.MONOLIT
+                    case 'панельный' | 'блочный':
+                        material = HouseMaterial.PANEL
+                    case _:
+                        raise ParseError('Unable to parse house type', link)
 
-            # Общая площадь
-            flat_area = float(FLAT_AREA_REGEX.match(
-                self.helper.get_element_text(SELECTORS['FLAT_AREA'])
-            ).group(1))
-            
-            # Площадь кухни
-            kitchen_area_str = self.helper.get_element_text(
-                SELECTORS['KITCHEN_AREA']
-            )
-            if kitchen_area_str is not None:
-                kitchen_area = float(KITCHEN_AREA_REGEX.match(
-                    kitchen_area_str
+                # Общая площадь
+                flat_area = float(FLAT_AREA_REGEX.match(
+                    self.helper.get_element_text(SELECTORS['FLAT_AREA'])
                 ).group(1))
-            else:
-                kitchen_area = 0
-        
-            # Есть ли балкон или лоджия
-            balcony_str = self.helper.get_element_text(
-                SELECTORS['BALCONY_AND_LOGGIA']
-            )
-            has_balcony = balcony_str is not None and \
-                ('балкон' in balcony_str or 'лоджия' in balcony_str)
-
-            # Состояние дома
-            decoration_str = self.helper.get_element_text(
-                SELECTORS['DECORATION']
-            )
-            if decoration_str is not None:
-                match DECORATION_REGEX.match(decoration_str).group(1).lower():
-                    case 'чистовая' | 'предчистовая':
-                        state = HouseState.STATE_DECORATION
-                    case 'без отделки':
-                        state = HouseState.NO_DECORATION
-                    case _:
-                        raise RuntimeError('Unable to parse house state')
-            else:
-                state_str = self.helper.get_element_text(SELECTORS['STATE'])
-                if state_str is None:
-                    raise RuntimeError('Unable to parse house state')
-                match STATE_REGEX.match(state_str).group(1).lower():
-                    case 'требует ремонта':
-                        state = HouseState.NO_DECORATION
-                    case 'косметический' | 'дизайнерский' | 'евро':
-                        state = HouseState.MODERN_DECORATION
-                    case _:
-                        raise RuntimeError('Unable to parse house state')
+                
+                # Площадь кухни
+                kitchen_area_str = self.helper.get_element_text(
+                    SELECTORS['KITCHEN_AREA']
+                )
+                if kitchen_area_str is not None:
+                    kitchen_area = float(KITCHEN_AREA_REGEX.match(
+                        kitchen_area_str
+                    ).group(1))
+                else:
+                    kitchen_area = 0
             
-            # Ближайшая станция метро
-            metro_station = self.helper.get_element_text(
-                SELECTORS['METRO_STATION']
-            )
-            metro_distance = 0
-            if metro_station is not None:
+                # Есть ли балкон или лоджия
+                balcony_str = self.helper.get_element_text(
+                    SELECTORS['BALCONY_AND_LOGGIA']
+                )
+                has_balcony = balcony_str is not None and \
+                    ('балкон' in balcony_str or 'лоджия' in balcony_str)
+
+                # Состояние дома
+                decoration_str = self.helper.get_element_text(
+                    SELECTORS['DECORATION']
+                )
+                if decoration_str is not None:
+                    match DECORATION_REGEX.match(decoration_str).group(1).lower():
+                        case 'чистовая' | 'предчистовая':
+                            state = HouseState.STATE_DECORATION
+                        case 'без отделки':
+                            state = HouseState.NO_DECORATION
+                        case _:
+                            raise ParseError('Unable to parse house state', link)
+                else:
+                    state_str = self.helper.get_element_text(SELECTORS['STATE'])
+                    if state_str is None:
+                        raise ParseError('Unable to parse house state', link)
+                    match STATE_REGEX.match(state_str).group(1).lower():
+                        case 'требует ремонта':
+                            state = HouseState.NO_DECORATION
+                        case 'косметический' | 'дизайнерский' | 'евро':
+                            state = HouseState.MODERN_DECORATION
+                        case _:
+                            raise ParseError('Unable to parse house state', link)
+                
+                # Ближайшая станция метро
+                metro_station = self.helper.get_element_text(
+                    SELECTORS['METRO_STATION']
+                )
+                metro_distance_str = self.helper.get_element_text(
+                    SELECTORS['METRO_DISTANCE']
+                )
+                if metro_station is None or metro_distance_str is None:
+                    raise ParseError('Unable to parse metro station', link)
+                
                 metro_distance_match = METRO_DISTANCE_REGEX.match(
-                    self.helper.get_element_text(SELECTORS['METRO_DISTANCE'])
+                    metro_distance_str
                 )
 
                 if metro_distance_match.group(4):
@@ -203,37 +208,39 @@ class AvitoParser(Parser):
                         map(int, metro_distance_match.group(5).split('–'))
                     ) // 2
                 else:
-                    metro_station = None
+                    raise ParseError('Unable to parse metro distance', link)
 
-            # Стоимость квартиры
-            price = int(
-                self.helper
-                .get_element_text(SELECTORS['PRICE'])
-                .replace(' ', '')
-            )
+                # Стоимость квартиры
+                price = int(
+                    self.helper
+                    .get_element_text(SELECTORS['PRICE'])
+                    .replace(' ', '')
+                )
 
-            return House(
-                location=location,
-                rooms_count=rooms_count,
-                segment=segment,
-                floor=floor,
-                floors_count=floors_count,
-                flat_area=flat_area,
-                kitchen_area=kitchen_area,
-                has_balcony=has_balcony,
-                material=material,
-                state=state,
-                metro_station=metro_station,
-                metro_distance=metro_distance,
-                price=price,
-                source_service=SourceService.AVITO,
-                url=link
-            )
-        finally:
-            self.helper.driver.close()
-            self.helper.driver.switch_to.window(
-                self.main_win_handle
-            )
+                return HouseBase(
+                    location=location,
+                    rooms_count=rooms_count,
+                    segment=segment,
+                    floor=floor,
+                    floors_count=floors_count,
+                    flat_area=flat_area,
+                    kitchen_area=kitchen_area,
+                    has_balcony=has_balcony,
+                    material=material,
+                    state=state,
+                    metro_station=metro_station,
+                    metro_distance=metro_distance,
+                    price=price,
+                    source_service=SourceService.AVITO,
+                    url=link
+                )
+            finally:
+                self.helper.driver.close()
+                self.helper.driver.switch_to.window(
+                    self.main_win_handle
+                )
+        except Exception:
+            raise ParseError('Unknown error', link)
    
     async def end(self):
         self.helper.driver.switch_to.window(self.main_win_handle)
