@@ -1,6 +1,5 @@
 from os import urandom
 from hashlib import pbkdf2_hmac
-from base64 import b64decode, b64encode
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
