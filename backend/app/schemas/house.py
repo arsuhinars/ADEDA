@@ -1,4 +1,5 @@
 import enum
+import math
 
 from pydantic import BaseModel
 
@@ -11,12 +12,32 @@ class HouseSegment(str, enum.Enum):
     # Старый жилой фонд
     OLD = 'old'
 
+    def get_verbose_value(self):
+        """ Получить человеко-читаемое значение """
+        match self:
+            case HouseSegment.NEW:
+                return 'Новостройка'
+            case HouseSegment.MODERN:
+                return 'Современное жилье'
+            case HouseSegment.OLD:
+                return 'Старый жилой фонд'
+
 
 class HouseMaterial(str, enum.Enum):
     """ Материал стен дома """
     BRICK = 'brick'
     PANEL = 'panel'
     MONOLIT = 'monolit'
+
+    def get_verbose_value(self):
+        """ Получить человеко-читаемое значение """
+        match self:
+            case HouseMaterial.BRICK:
+                return 'Кирпич'
+            case HouseMaterial.PANEL:
+                return 'Панель'
+            case HouseMaterial.MONOLIT:
+                return 'Монолит'
 
 
 class HouseState(str, enum.Enum):
@@ -28,11 +49,29 @@ class HouseState(str, enum.Enum):
     # Современная отделка
     MODERN_DECORATION = 'modern'
 
+    def get_verbose_value(self):
+        """ Получить человеко-читаемое значение """
+        match self:
+            case HouseState.NO_DECORATION:
+                return 'Без отделки'
+            case HouseState.STATE_DECORATION:
+                return 'Муниципальный ремонт'
+            case HouseState.MODERN_DECORATION:
+                return 'Современная отделка'
+
 
 class SourceService(str, enum.Enum):
     """ Сервис-источник данных """
     AVITO = 'avito'
     CIAN = 'cian'
+
+    def get_verbose_value(self):
+        """ Получить человеко-читаемое значение """
+        match self:
+            case SourceService.AVITO:
+                return 'Avito'
+            case SourceService.CIAN:
+                return 'cian.ru'
 
 
 class HouseBase(BaseModel):
@@ -109,8 +148,16 @@ class HouseAdjustments(BaseModel):
     balcony: float = 0.0      # Корректировка на наличие балкона/лоджии
     repairs: float = 0.0      # Корректировка на ремонт
 
-    def calc_size(self):
+    def calc_size(self, target_house: HouseBase):
         """ Вычислить размер применненых корректировок """
+
+        t = math.prod(map(
+            lambda it: (1 + it/100),
+            self.dict(exclude={'repairs': True}).values()
+        ))
+        repairs_percent = self.repairs * target_house.flat_area
+        repairs_percent /= target_house.price * t
+
         return abs(self.trade) + abs(self.area) + abs(self.metro) + \
             abs(self.floor) + abs(self.kitchen_area) + \
-            abs(self.balcony) + abs(self.repairs)
+            abs(self.balcony) + abs(repairs_percent)    
