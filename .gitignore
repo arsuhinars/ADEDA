@@ -42,6 +42,7 @@ coverage.xml
 cover/
 
 # Virtual environment
+venv/
 env/
 
 # VSCode stuff
@@ -61,5 +62,8 @@ env/
 # Environment file
 .env
 
-# Log files stuff
+# Log files
 *.log
+
+# SQLite database
+*.db
