@@ -5,7 +5,8 @@ from pydantic import ValidationError
 from openpyxl import load_workbook
 
 from ..internal.errors import ParseError
-from ..schemas import HouseBase, HouseSegment, HouseMaterial, HouseState
+from ..schemas import HouseBase, HouseBrief, \
+    HouseSegment, HouseMaterial, HouseState
 from ..dependencies import check_authorization
 
 router = APIRouter(
@@ -15,7 +16,7 @@ router = APIRouter(
 
 @router.post(
     '/parse',
-    response_model=list[HouseBase],
+    response_model=list[HouseBrief],
     response_model_exclude_none=True,
     dependencies=[Depends(check_authorization)]
     )
@@ -27,7 +28,7 @@ def parse_house_table(file: bytes = File()):
         raise ParseError('Unable to load table')
     ws = wb[wb.sheetnames[0]]
 
-    houses: list[HouseBase] = []
+    houses: list[HouseBrief] = []
 
     for row in ws.iter_rows(2, max_col=11):
         # Сегмент дома
@@ -101,7 +102,7 @@ def parse_house_table(file: bytes = File()):
                 )
         
         try:
-            houses.append(HouseBase(
+            houses.append(HouseBrief(
                 location=row[0].value,
                 rooms_count=row[1].value,
                 segment=segment,
@@ -111,7 +112,6 @@ def parse_house_table(file: bytes = File()):
                 flat_area=row[6].value,
                 kitchen_area=row[7].value,
                 has_balcony=has_balcony,
-                metro=None,
                 metro_distance=row[9].value,
                 state=state
             ))

@@ -2,7 +2,7 @@ import enum
 
 from pydantic import BaseModel
 
-class HouseSegment(enum.Enum):
+class HouseSegment(str, enum.Enum):
     """ Сегмент дома """
     # Новостройка
     NEW = 'new'
@@ -12,14 +12,14 @@ class HouseSegment(enum.Enum):
     OLD = 'old'
 
 
-class HouseMaterial(enum.Enum):
+class HouseMaterial(str, enum.Enum):
     """ Материал стен дома """
     BRICK = 'brick'
     PANEL = 'panel'
     MONOLIT = 'monolit'
 
 
-class HouseState(enum.Enum):
+class HouseState(str, enum.Enum):
     """ Состояние дома """
     # Без отделки
     NO_DECORATION = 'no'
@@ -29,7 +29,7 @@ class HouseState(enum.Enum):
     MODERN_DECORATION = 'modern'
 
 
-class SourceService(enum.Enum):
+class SourceService(str, enum.Enum):
     """ Сервис-источник данных """
     AVITO = 'avito'
     CIAN = 'cian'
@@ -37,6 +37,8 @@ class SourceService(enum.Enum):
 
 class HouseBase(BaseModel):
     """ Модель дома/квартиры """
+    id: int | None = None
+
     location: str
     rooms_count: int
     segment: HouseSegment
@@ -77,14 +79,13 @@ class HouseAdjustmentsCheckList(BaseModel):
     
     Подробнее про корректировки в `HouseAnalogAdjustments`
     """
-    trade: bool
-    area: bool
-    metro: bool
-    floor: bool
-    room_count: bool
-    kitchen_area: bool
-    balcony: bool
-    repairs: bool
+    trade: bool = True
+    area: bool = True
+    metro: bool = True
+    floor: bool = True
+    kitchen_area: bool = True
+    balcony: bool = True
+    repairs: bool = True
 
 
 class HouseRequest(BaseModel):
@@ -92,7 +93,7 @@ class HouseRequest(BaseModel):
 
     house: HouseBrief
     adjustments: HouseAdjustmentsCheckList
-    max_house_count: int
+    max_house_count: int = 10
 
 
 class HouseAnalogAdjustments(BaseModel):
@@ -100,17 +101,16 @@ class HouseAnalogAdjustments(BaseModel):
     Модель корректировок квартиры-аналога. Корректировки указываются в процентах
     от -100 до 100
     """
-    trade: float        # Корректировка на торг
-    area: float         # Корректировка на площадь
-    metro: float        # Корректировка на отдаленность от метро
-    floor: float        # Корректировка на этаж
-    room_count: float   # Корректировка на комнатность
-    kitchen_area: float # Корректировка на площадь кухни
-    balcony: float      # Корректировка на наличие балкона/лоджии
-    repairs: float      # Корректировка на ремонт
+    trade: float = 0.0        # Корректировка на торг
+    area: float = 0.0         # Корректировка на площадь
+    metro: float = 0.0        # Корректировка на отдаленность от метро
+    floor: float = 0.0        # Корректировка на этаж
+    kitchen_area: float = 0.0 # Корректировка на площадь кухни
+    balcony: float = 0.0      # Корректировка на наличие балкона/лоджии
+    repairs: float = 0.0      # Корректировка на ремонт
 
     def calc_size(self):
         """ Вычислить размер применненых корректировок """
         return abs(self.trade) + abs(self.area) + abs(self.metro) + \
-            abs(self.floor) + abs(self.room_count) + abs(self.kitchen_area) + \
+            abs(self.floor) + abs(self.kitchen_area) + \
             abs(self.balcony) + abs(self.repairs)
