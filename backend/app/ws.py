@@ -4,7 +4,7 @@ from json import JSONDecodeError
 from fastapi import WebSocket
 from pydantic import ValidationError
 
-from .schemas import ErrorResponse, HouseRequest, HouseBase, HouseAnalogAdjustments
+from .schemas import ErrorResponse, HouseRequest, HouseBase, HouseAdjustments
 from .internal.errors import ParseError
 from .internal.house_processing import calculate_adjustments
 from .parsers.avito import AvitoParser
@@ -13,7 +13,7 @@ from app import config
 async def searcher_endpoint(ws: WebSocket):
     await ws.accept()
 
-    houses: list[tuple[HouseBase, HouseAnalogAdjustments]] = []
+    houses: list[tuple[HouseBase, HouseAdjustments]] = []
 
     try:
         req_json = await asyncio.wait_for(
