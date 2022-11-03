@@ -71,7 +71,8 @@ def get_user_by_token(token: str, session: Session) -> (User | None):
     """
     try:
         token_data = jwt.decode(token, config.SECRET_KEY)
-        return session.query(User).filter(User.id == token_data['sub']).first()
+        user_id = int(token_data['sub'])
+        return session.query(User).filter(User.id == user_id).first()
     except JWTError:
         return None
 
@@ -95,7 +96,7 @@ def create_jwt_token(user: User):
     Создать JWT токен для пользователя, по которому он сможет использовать сайт
     """
     token = jwt.encode({
-        'sub': user.id,
+        'sub': str(user.id),
         'exp': datetime.now() + timedelta(seconds=config.ACCESS_TOKEN_EXPIRE)
     }, config.SECRET_KEY)
     return token
