@@ -1,7 +1,10 @@
 import asyncio
 import re
+from urllib.parse import urlencode
+from time import time
 
 from selenium.webdriver.common.by import By
+from selenium.common import NoSuchElementException
 
 from . import Parser
 from ..schemas import HouseBase, HouseSegment, HouseMaterial, HouseState, \
@@ -10,7 +13,7 @@ from ..internal.webdriver_helper import WebdriverHelper
 from ..internal.errors import ParseError
 from app import config
 
-AVITO_BASE_URL = 'https://www.avito.ru/moskva/kvartiry/prodam'
+AVITO_BASE_URL = 'https://www.avito.ru/moskva/kvartiry/prodam/?'
 
 SELECTORS = {
     'CAPCHA_LABEL': './/h2[contains(@class, "firewall-title")]',
@@ -48,17 +51,28 @@ METRO_DISTANCE_REGEX = re.compile('(((от|до) (\d+))|(\d+[–-]\d+)|(\d+)) м
 class AvitoParser(Parser):
     """ Парсер с сайта Avito """
 
+    __last_parse_time = 0.0
+
+    def __init__(self, search_query: str | None = None):
+        """
+        Конструктор класса
+
+        * search_query - поисковый запрос
+        """
+        self.url = AVITO_BASE_URL
+        if search_query is not None:
+            self.url += urlencode({'q': search_query})
+
     async def begin(self):
         self.helper = WebdriverHelper()
         self.helper.driver.switch_to.new_window()
         self.main_win_handle = self.helper.driver.current_window_handle
 
-        self.helper.driver.get(AVITO_BASE_URL)
+        await AvitoParser.wait_delay()
+        self.helper.driver.get(self.url)
         self.flat_iter = iter(self.get_flats_links())
 
     async def parse_next(self) -> HouseBase:
-        await asyncio.sleep(config.PARSE_DELAY)
-
         try:
             try:
                 # Пытаемся получить ссылку на следующую квартиру
@@ -69,19 +83,32 @@ class AvitoParser(Parser):
                     self.main_win_handle
                 )
                 # Переходим на следующую страницу
-                self.helper.driver.find_element(
-                    By.XPATH, SELECTORS['NEXT_PAGE_BTN']
-                ).click()
+                try:
+                    next_btn = self.helper.driver.find_element(
+                        By.XPATH, SELECTORS['NEXT_PAGE_BTN']
+                    )
+
+                    await AvitoParser.wait_delay()
+                    next_btn.click()
+                except NoSuchElementException:
+                    # Если больше нет страниц
+                    return None
+
                 # Проверяем капчу
                 if self.check_capcha():
                     raise ParseError('Capcha required')
                 # Получаем список квартир
-                self.flat_iter = iter(self.get_flats_links())
+                flats_links = self.get_flats_links()
+                if len(flats_links) == 0:
+                    # Если больше нет квартир
+                    return None
+
+                self.flat_iter = iter(flats_links)
                 
                 link = next(self.flat_iter)
-                await asyncio.sleep(config.PARSE_DELAY)
             
             # Открываем страницу след. квартиры
+            await AvitoParser.wait_delay()
             self.helper.driver.switch_to.new_window()
             self.helper.driver.get(link)
             if self.check_capcha():
@@ -260,3 +287,8 @@ class AvitoParser(Parser):
             By.XPATH, SELECTORS['FLAT_LINKS']
         )
         return map(lambda el: el.get_attribute('href'), els)
+
+    async def wait_delay():
+        delay = AvitoParser.__last_parse_time + config.PARSE_DELAY - time()
+        AvitoParser.__last_parse_time = time()
+        await asyncio.sleep(max(delay, 0))
