@@ -23,6 +23,7 @@ if config.ADMIN_LOGIN and config.ADMIN_PASSWORD:
         session.commit()
 
 
+# Создаем объект приложения
 app = FastAPI()
 
 
@@ -32,6 +33,12 @@ from .routes.table import router as table_router
 
 app.include_router(auth_router)
 app.include_router(table_router)
+
+
+# Добавляем обработчик веб-сокетов
+from .ws import searcher_endpoint
+
+app.add_api_websocket_route('/', searcher_endpoint)
 
 
 # Добавляем обработчики ошибок
