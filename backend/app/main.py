@@ -46,6 +46,7 @@ from .internal.errors import *
 
 app.add_exception_handler(AppError, app_exception_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(500, internal_error_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 

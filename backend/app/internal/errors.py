@@ -63,6 +63,13 @@ def http_exception_handler(request: Request, err: HTTPException):
     )
 
 
+def internal_error_handler(request: Request, err: Exception):
+    return JSONResponse(
+        status_code=500,
+        content=ErrorResponse(error='Internal server error').dict(exclude_none=True)
+    )
+
+
 def validation_exception_handler(request: Request, err: RequestValidationError):
     return JSONResponse(
         status_code=400,
