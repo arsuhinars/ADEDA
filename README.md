@@ -4,11 +4,11 @@
 ADEDA.
 
 Состав команды:
-- @arsuhinars
-- @Aveocr
-- @mister-mamaster
-- @DashulkaUbivator
-- @Ekaterina-Kas
+- @arsuhinars - back-end
+- @Aveocr - PM-manager
+- @mister-mamaster - PM-manager
+- @DashulkaUbivator - frontend
+- @Ekaterina-Kas - frontend
 
 # Используемый стек
 * Backend:
