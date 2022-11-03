@@ -7,11 +7,20 @@ from pydantic import ValidationError
 from .schemas import ErrorResponse, HouseRequest, HouseBase, HouseAdjustments
 from .internal.errors import ParseError
 from .internal.house_processing import calculate_adjustments
+from .internal.auth import verify_user_token
 from .parsers.avito import AvitoParser
 from app import config
 
 async def searcher_endpoint(ws: WebSocket):
     await ws.accept()
+
+    if 'token' not in ws.query_params or \
+        not verify_user_token(ws.query_params['token']):
+        await ws.send_json(
+            ErrorResponse(error='Invalid token').dict(exclude_none=True)
+        )
+        await ws.close()
+        return
 
     houses: list[tuple[HouseBase, HouseAdjustments]] = []
 
