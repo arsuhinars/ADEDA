@@ -20,3 +20,7 @@ WEBDRIVER_OPTIONS = {
     'headless': False,
     'page_load_strategy': 'eager',
 }
+
+
+# Настройки поисковика
+SEARCHER_QUERY_TIMEOUT = 5
