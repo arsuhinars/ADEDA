@@ -12,7 +12,7 @@ ADEDA.
 
 # Используемый стек
 * Backend:
-Python, pipenv, FastAPI, SQLAlchemy, Selenium, openpyxl
+Python, FastAPI, SQLAlchemy, Selenium, openpyxl и др.
 
 # Краткое описание
 1. Пользователь, заходя на сайт, авторизуется под своим логином и паролем
