@@ -148,15 +148,15 @@ class HouseAdjustments(BaseModel):
     balcony: float = 0.0      # Корректировка на наличие балкона/лоджии
     repairs: float = 0.0      # Корректировка на ремонт
 
-    def calc_size(self, target_house: HouseBase):
+    def calc_size(self, analog_house: HouseBase):
         """ Вычислить размер применненых корректировок """
 
         t = math.prod(map(
             lambda it: (1 + it/100),
             self.dict(exclude={'repairs': True}).values()
         ))
-        repairs_percent = self.repairs * target_house.flat_area
-        repairs_percent /= target_house.price * t
+        repairs_percent = self.repairs * analog_house.flat_area
+        repairs_percent /= analog_house.price * t
 
         return abs(self.trade) + abs(self.area) + abs(self.metro) + \
             abs(self.floor) + abs(self.kitchen_area) + \

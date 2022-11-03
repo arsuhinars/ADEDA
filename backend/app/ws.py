@@ -75,7 +75,7 @@ async def searcher_endpoint(ws: WebSocket):
                 house,
                 calculate_adjustments(req.house, house, req.adjustments)
             ))
-            houses.sort(key=lambda t: t[1].calc_size())
+            houses.sort(key=lambda t: t[1].calc_size(t[0]))
 
             await ws.send_json(list(map(lambda t: t[0].dict(), houses)))
 
