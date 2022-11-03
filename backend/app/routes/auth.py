@@ -7,7 +7,7 @@ from ..internal.auth import authenticate_user, create_jwt_token
 from ..internal.auth import create_user as auth_create_user
 from ..internal.errors import AppError, ForbiddenError
 from ..models import User
-from ..schemas import UserCreate, TokenResponse
+from ..schemas import UserCreate
 
 router = APIRouter(
     prefix='/auth',
@@ -16,7 +16,6 @@ router = APIRouter(
 
 @router.get(
     '/get_token',
-    response_model=TokenResponse,
     summary='Авторизоваться и получить токен'
     )
 def get_token(
@@ -43,8 +42,8 @@ def get_token(
     '/create_user',
     summary='Зарегистрировать нового пользователя')
 def create_user(
-    user_create: UserCreate,
-    user: User = Depends(check_and_get_user),
+    user: UserCreate,
+    curr_user: User = Depends(check_and_get_user),
     session: Session = Depends(get_db_session)):
     """
     Метод регистрации нового пользователя. Для доступа требуется, чтобы 
@@ -53,7 +52,7 @@ def create_user(
     В теле запроса необходимо передать поля в формате JSON:
     `login`, `password`, `is_admin`(опционально) 
     """
-    if not user.is_admin:
+    if not curr_user.is_admin:
         raise ForbiddenError()
-    auth_create_user(user_create, session)
+    auth_create_user(user, session)
     return JSONResponse({})
