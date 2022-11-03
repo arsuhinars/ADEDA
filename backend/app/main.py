@@ -38,7 +38,7 @@ app.include_router(table_router)
 # Добавляем обработчик веб-сокетов
 from .ws import searcher_endpoint
 
-app.add_api_websocket_route('/', searcher_endpoint)
+app.add_api_websocket_route('/search_houses', searcher_endpoint)
 
 
 # Добавляем обработчики ошибок
