@@ -96,7 +96,7 @@ class HouseRequest(BaseModel):
     max_house_count: int = 10
 
 
-class HouseAnalogAdjustments(BaseModel):
+class HouseAdjustments(BaseModel):
     """
     Модель корректировок квартиры-аналога. Корректировки указываются в процентах
     от -100 до 100

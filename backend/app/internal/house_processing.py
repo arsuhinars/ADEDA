@@ -1,4 +1,4 @@
-from ..schemas import HouseBase, HouseBrief, HouseAnalogAdjustments, \
+from ..schemas import HouseBase, HouseBrief, HouseAdjustments, \
     HouseState, HouseAdjustmentsCheckList
 
 AREA_RANGES = [30, 50, 65, 90, 120]
@@ -37,14 +37,14 @@ def calculate_adjustments(
     reference: HouseBrief,
     analog: HouseBase,
     check_list = HouseAdjustmentsCheckList()
-    ) -> HouseAnalogAdjustments:
+    ) -> HouseAdjustments:
     """
     Функция вычисления корректировок для аналога и эталона
 
     * `reference` - объект дома - эталона
     * `analog` - объект аналога
     """
-    adjustments = HouseAnalogAdjustments()
+    adjustments = HouseAdjustments()
 
     # Корректировка на торг
     if check_list.trade:
