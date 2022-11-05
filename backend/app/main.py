@@ -36,6 +36,14 @@ app.mount('/', StaticFiles(directory=config.FRONTEND_PATH, html=True))
 def not_found_error_handler(request, err):
     return RedirectResponse('/errors/error404.html')
 
+@app.exception_handler(401)
+def authorization_required(request, err):
+    return RedirectResponse('/errors/error401.html')
+
+@app.exception_handler(403)
+def authorization_required(request, err):
+    return RedirectResponse('/errors/error403.html')
+
 @app.exception_handler(500)
 def internal_error_handler(request, err):
     return RedirectResponse('/errors/error500.html')
