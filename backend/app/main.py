@@ -31,8 +31,8 @@ app = FastAPI()
 from .routes.auth import router as auth_router
 from .routes.table import router as table_router
 
-app.include_router(auth_router)
-app.include_router(table_router)
+# Монтируем приложение для API
+app.mount('/api', api_app)
 
 
 # Добавляем обработчик веб-сокетов
