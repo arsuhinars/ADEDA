@@ -7,6 +7,7 @@ from jose import jwt, JWTError
 
 from ..schemas import UserCreate
 from ..models import User
+from ..db import SessionLocal
 from app import config
 
 def hash_password(password: str, salt: bytes):
@@ -100,3 +101,22 @@ def create_jwt_token(user: User):
         'exp': datetime.now() + timedelta(seconds=config.ACCESS_TOKEN_EXPIRE)
     }, config.SECRET_KEY)
     return token
+
+
+def check_and_create_admin():
+    """
+    Метод для проверки и создания аккаунта администратора.
+    Логин и пароль указываются в .env файле
+    """
+    # Автоматически создаем аккаунт администратора
+    if config.ADMIN_LOGIN is not str or config.ADMIN_PASSWORD is not str:
+        return
+
+    with SessionLocal() as session:
+        if session.query(User).filter(User.is_admin == True).count() == 0:
+            create_user(UserCreate(
+                login = config.ADMIN_LOGIN,
+                password = config.ADMIN_PASSWORD,
+                is_admin = True
+            ), session)
+        session.commit()
