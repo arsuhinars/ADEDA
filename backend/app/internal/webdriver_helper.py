@@ -60,8 +60,7 @@ def on_start():
 
 def on_end():
     """ Функция должна вызываться при завершении приложения """
-    shared_driver.switch_to.window(shared_driver.window_handles[0])
-    shared_driver.close()
+    shared_driver.quit()
 
 
 class WebdriverHelper:
