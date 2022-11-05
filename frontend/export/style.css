@@ -1,10 +1,5 @@
-/*@import url(https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap);
-*/
 body{
     font-family: 'Raleway', sans-serif;
-    height: 100%;
-    display: block;
-    margin: 0;
 }
 header{
     width: 100%;
@@ -17,93 +12,56 @@ header{
     position: absolute;
     width: 640px;
     height: 165px;
-    left:30%;
+    left: 30%;
     top: 346px;
     background: #ECEFFF;
     border: 1px solid #CFD6FF;
     border-radius: 7px;
- }
-
- .button{
-    width: 100%;
+ 
+    }
+#import-btn{
     display: flex;
-    justify-content: center;
-}
-a.download-btn {
-    background: #1940FE;
+    padding: 24px 218px;
+    position: absolute;
+    width: 640;
+    height: 77px;
+    left: 30.5%;
+    top: 560px;
+    background-color: #1940FE;
     border-radius: 7px;
-    text-decoration: none;
-    color: #FFFFFF;
-    font-size: 25px;
-    padding: 24px 190px;
-    position: absolute;
+    border: #1940FE;
 }
-a.download-btn:hover{
+#import-btn:hover{
     background: #4463fe;
+    cursor: pointer;
 }
-.holder{
-        
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-.podpis{
-    position: absolute;
-    width: 413px;
-    height: 51px;
-    left: 150px;
-    top: 43px;
-    margin-top: 20px;
+#upload-text{
+    width: 189px;
+    height: 29px;
     font-weight: 400;
     font-size: 25px;
+    line-height: 29px;
+    color: #FFFFFF;  
 }
-.main{
-    padding: 5%;
-    width: 100%;
-    height: 100%;
-}
-.heading{
-    top: 15%;
-    width: 100%;
-    position: absolute;
+.podpis{
+position: absolute;
+width: 413px;
+height: 51px;
+left:150px;
+top:43px;
+margin-top: 20px;
+font-weight: 400;
+font-size: 25px;
+line-height: 29px;
+color: #000000;
 }
 #H1Style{
-    margin: 0;
-    padding: 3% 0;
-    color: #000000;
-    font-size: 50px;
+    padding-left: 5%;
     font-weight: 600;
-    max-width: 100%;
+    font-size: 45px;
+    line-height: 53px;
 }
+
 #strelaForm{
-    margin-right: 450px;
+    margin-right:450px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
