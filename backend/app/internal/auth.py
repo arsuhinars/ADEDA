@@ -109,7 +109,7 @@ def check_and_create_admin():
     Логин и пароль указываются в .env файле
     """
     # Автоматически создаем аккаунт администратора
-    if config.ADMIN_LOGIN is not str or config.ADMIN_PASSWORD is not str:
+    if (config.ADMIN_LOGIN is None) or (config.ADMIN_PASSWORD is None):
         return
 
     with SessionLocal() as session:
