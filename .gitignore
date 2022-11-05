@@ -43,7 +43,9 @@ cover/
 
 # Virtual environment
 venv/
+.venv/
 env/
+.env/
 
 # VSCode stuff
 .vscode/
