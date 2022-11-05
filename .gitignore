@@ -67,3 +67,7 @@ env/
 
 # SQLite database
 *.db
+
+# IDE files
+.idea
+*.htaccess
