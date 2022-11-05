@@ -1,4 +1,5 @@
-from os import environ
+import os
+from os import environ, path
 
 # Настройки БД
 DATABASE_URL = environ.get('DATABASE_URL')
@@ -24,3 +25,15 @@ WEBDRIVER_OPTIONS = {
 
 # Настройки поисковика
 SEARCHER_QUERY_TIMEOUT = 5
+
+
+# Настройки фронденда
+FRONTEND_PATH = path.normpath(path.join(os.getcwd(), '../frontend'))
+FRONTEND_ERROR_HANDLERS = {
+    404: '',
+    500: '',
+    502: '',
+    503: '',
+    504: '',
+}
+FRONTEND_COMMON_ERROR_HANDLER = ''

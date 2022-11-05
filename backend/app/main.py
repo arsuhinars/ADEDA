@@ -27,27 +27,38 @@ if config.ADMIN_LOGIN and config.ADMIN_PASSWORD:
 app = FastAPI()
 
 
-# Добавляем обработчики путей
-from .routes.auth import router as auth_router
-from .routes.table import router as table_router
+# Добавляем редирект на главную страницу
+@app.get('/')
+def index_page():
+    return RedirectResponse('/main')
+
 
 # Монтируем приложение для API
 app.mount('/api', api_app)
-
-
-# Добавляем обработчик веб-сокетов
-from .ws import searcher_endpoint
-
-app.add_api_websocket_route('/search_houses', searcher_endpoint)
+# Монтируем файлы фронтенда
+app.mount('/', StaticFiles(directory=config.FRONTEND_PATH, html=True))
 
 
 # Добавляем обработчики ошибок
-from .internal.errors import *
+@app.exception_handler(404)
+def not_found_error_handler(request, err):
+    return RedirectResponse('/errors/error404.html')
 
-app.add_exception_handler(AppError, app_exception_handler)
-app.add_exception_handler(HTTPException, http_exception_handler)
-app.add_exception_handler(500, internal_error_handler)
-app.add_exception_handler(RequestValidationError, validation_exception_handler)
+@app.exception_handler(500)
+def internal_error_handler(request, err):
+    return RedirectResponse('/errors/error500.html')
+
+@app.exception_handler(502)
+def bad_gateway_handler(request, err):
+    return RedirectResponse('/errors/error502.html')
+
+@app.exception_handler(503)
+def service_unavailable_handler(request, err):
+    return RedirectResponse('/errors/error503.html')
+
+@app.exception_handler(504)
+def gateway_timeout_handler(request, err):
+    return RedirectResponse('/errors/error504.html')
 
 
 # Добавляем обработчики событий запуска и выключения сервера
