@@ -8,7 +8,6 @@ fastapi = "*"
 uvicorn = {extras = ["standart"], version = "*"}
 starlette = "*"
 sqlalchemy = "*"
-psycopg2 = "*"
 pydantic = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 selenium = "*"
