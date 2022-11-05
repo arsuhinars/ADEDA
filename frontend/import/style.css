@@ -1,0 +1,141 @@
+#upload-btn{
+    position: absolute;
+width: 640px;
+height: 165px;
+left:30%;
+top: 346px;
+
+background: #ECEFFF;
+border: 1px solid #CFD6FF;
+border-radius: 7px;
+ 
+    }
+#import-btn{
+    display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 24px 218px;
+gap: 10px;
+
+position: absolute;
+width:640; /*625px;*/
+height: 77px;
+left: 30.5%;/*550px; /*544px;*/
+top: 560px;
+border-color:#1940FE ;
+background: #1940FE;
+border-radius: 7px;
+
+}
+
+
+    #upload-text{
+        width: 189px;
+height: 29px;
+
+font-family: "Roboto", "Raleway", sans-serif;
+font-style: normal;
+font-weight: 400;
+font-size: 25px;
+line-height: 29px;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+
+flex: none;
+order: 0;
+flex-grow: 0;
+     
+    
+    }
+    html,
+    body{
+        margin: 0;
+    }
+    .holder{
+        
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+    }
+    .center{
+        
+        height: 100%;
+        width: 100%;
+        
+       display: flex;
+       
+        justify-content: center;
+     
+    }
+    .podpis{
+        position: absolute;
+width: 413px;
+height: 51px;
+left:110px;
+top:43px;
+margin-left:50px;
+font-family: "Roboto", "Raleway", sans-serif;
+font-style: normal;
+font-weight: 400;
+font-size: 25px;
+line-height: 29px;
+
+color: #000000;
+    }
+  
+
+#H1Style{
+    padding-bottom: 600px;
+padding-left: 15px;
+padding-right:10px;
+padding-top:10px;
+
+margin-left:15px;
+margin-top: 20px;
+font-family: "Roboto", "Raleway", sans-serif;
+font-style: normal;
+font-weight: 600;
+font-size: 45px;
+line-height: 53px;
+}
+
+#icon-format{
+    margin-top:20px;
+    padding-left: 25px;
+}
+#strelaForm{
+    margin-right:450px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   

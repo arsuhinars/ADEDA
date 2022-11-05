@@ -1,0 +1,60 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family: 'Raleway', sans-serif;
+    height: 100%;
+    display: block;
+}
+header{
+    width: 100%;
+    display: flex;
+}
+#logo{
+    padding: 1% 5%;
+}
+main{
+    width: 100%;
+}
+.wrapper{
+    padding: 5%;
+}
+#main_img{
+    width: 40%;
+    float: right;
+}
+.description{
+    top: 35%;
+    width: 60%;
+    position: absolute;
+}
+.description h1{
+    margin: 0;
+    padding: 3% 0;
+    color: #000000;
+    font-size: 50px;
+    font-weight: 600;
+    max-width: 100%;
+}
+.description p{
+    color: #000000;
+    font-size: 20px;
+    padding-bottom: 4%;
+    padding-right: 40%;
+    font-weight: 600;
+    max-width: 100%;
+}
+
+a.input {
+    background: #1940FE;
+    border-radius: 7px;
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 25px;
+    padding: 20px 200px;
+    position: absolute;
+}
+a.input:hover{
+    background: #4463fe;
+}

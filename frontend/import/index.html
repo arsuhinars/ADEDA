@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <script src="main.js"></script>
+        <title>Document</title>
+       
+    </head>
+    
+    <body>
+ 
+      <img src="icon.jpg" width="400" height="50" id="icon-format" >
+        <h1 id="H1Style">Загрузка данных для анализа</h1>  
+    
+   
+            <div class="center">
+                
+<table>
+ 
+    <tr>
+        <td>
+            <div class="col s12 m4 l3">
+        <button id="upload-btn">
+            <div><img src="strela.jpg" height="120px" width="110px" id="strelaForm">
+              <div class="podpis"> Загрузите файл .xls или .xlsx <br>(pазмер не больше 50ГБ)
+            </div> 
+                </div>
+            </button>
+        <span  id="upload-text"></span><!--ВОТКУНТЬ ВВЕРХ И СДЕЛАТЬ МЕТОД ИЗМЕНЕНИЯ ТЕКСТА НА ИМЯ ЗАГРУЖЕННОГО ФАЙЛА-->
+    </div>
+    </td>
+        </tr>
+
+        <tr>
+            <td>
+         <input type="file" id="upload-file" accept=".xls, .xlsx" hidden="hidden" ">
+         <button id="import-btn">
+            <span id="upload-text">Импортировать</span>
+        </button>
+            </td>
+        </tr>
+        
+        </table>
+    
+
+</div>
+
+</body>
+</html>
