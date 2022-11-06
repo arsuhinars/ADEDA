@@ -1,33 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизация</title>
-    <link rel="icon" href="../logo2.svg">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Montserrat:wght@400;700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Главная</title>
+<link rel="stylesheet" href="style.css">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Caveat&family=Montserrat:wght@400;700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+<script src="script.js"></script>
 </head>
 <body>
+    <header>
+        <img src="../logo.svg" alt="logo" width="300" draggable="false" id="logo">
+    </header>
     <main>
-        <div class="autorization-form-container">
-            <div class="logo">
-                <img src="../logo.svg" alt="logo" width="300" draggable="false">
+        <div class="wrapper">
+            <img src="../main/img/main.png" alt="img" id="main_img">
+            <div class="description">
+                <h1>Расчет рыночной стоимости квартиры в Москве</h1>
+                <p>Мы создали ИИ для оценки и расчета рыночной стоимости квартиры в Москве</p>
+                <a class="input" href="login.php" id="loginLink">Вход</a>
             </div>
-            <h1 class="form-title">
-                Авторизация
-            </h1>
-            <div class="form-fields">
-                <div class="form-field">
-                    <input type="text" placeholder="Имя пользователя">
-                </div>
-                <div class="form-field">
-                    <input type="text" placeholder="Пароль">
-                </div>
-            </div>
-            <div class="form-button">Войти</div>
         </div>
     </main>
+
+<div class="overlay" style="display: none;">
+    <div class="login-wrapper">
+        <div class="login-content" id="loginTarget">
+            <a class="close">x</a>
+            <h3>Авторизация</h3>
+            <form method="post" action="login.php">
+                <label for="username">
+                    <input type="text" name="username" id="username" placeholder="Имя пользователя" required />
+                </label>
+                <label for="password">
+                    <input type="password" name="password" id="password" placeholder="Пароль" required />
+                </label>
+                <button type="submit">Войти</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
