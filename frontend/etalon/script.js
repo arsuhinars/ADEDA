@@ -16,11 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
         etalons.innerHTML = html + etalons.innerHTML
     }
 
-    document.querySelector('#select-btn').addEventListener('click', () => {
+    document.querySelector('#select-btn').addEventListener('click', (ev) => {
         let index = document.querySelector('input[type=radio]:checked').value
 
         sessionStorage.setItem('curr_ref', JSON.stringify(references[index]))
 
-        window.location.href = '/analog'
+        window.location.href = '/correction'
+        ev.preventDefault()
     })
 })

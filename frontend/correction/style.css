@@ -1,0 +1,50 @@
+body{
+    font-family: 'Raleway', sans-serif;
+}
+header{
+    width: 100%;
+    display: flex;
+}
+.heading{
+    margin: 0;
+    padding: 3% 5%;
+    color: #000000;
+    font-size: 45px;
+    font-weight: 600;
+    max-width: 100%;
+}
+#logo{
+    padding: 1% 5%;
+}
+details {
+    padding: 1% 10%;
+}
+#import-btn{
+    padding: 24px 218px;
+    position: relative;
+    width: 640;
+    height: 77px;
+    left: 75%;
+    background-color: #1940FE;
+    border-radius: 7px;
+    border: #1940FE;
+}
+#import-btn:hover{
+    background: #4463fe;
+    cursor: pointer;
+}
+#upload-text{
+    width: 189px;
+    height: 29px;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 29px;
+    color: #FFFFFF;  
+}
+.analog{
+    display: block;
+}
+.center{
+    display: block;
+    padding-top: 10%;
+}
