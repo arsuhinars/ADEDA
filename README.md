@@ -27,7 +27,7 @@ Python, FastAPI, SQLAlchemy, Selenium, openpyxl и др.
 
     `git clone https://github.com/arsuhinars/ADEDA.git`
 
-2. Установите Python и установите pipenv, если он не установлен:
+2. Убедитесь, что у вас установлен Python 3.10. Установите pipenv, если его нет:
 
     `pip install pipenv`
 
@@ -45,6 +45,9 @@ Python, FastAPI, SQLAlchemy, Selenium, openpyxl и др.
     ADMIN_LOGIN=<логин администратора>
     ADMIN_PASSWORD=<пароль администратора>
     ```
+
+    Указывать логин и пароль администратора необходимо только при первом
+    запуске, потом эти поля можно удалить, чтобы избежать их утечки при взломе.
 
 5. Перейдите в директорию `backend`, введите следующую команду для запуска
     сервера:
