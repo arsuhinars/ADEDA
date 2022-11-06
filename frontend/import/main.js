@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelector('#import-btn').addEventListener('click', (ev) => {
-        loadTable(document.querySelector('#upload-file'))
+        let input = document.querySelector('#upload-file')
+        input.click()
+
+        loadTable(input)
             .then((houses) => {
                 sessionStorage.setItem('references', JSON.stringify(houses))
                 window.location.href = '/analog'
