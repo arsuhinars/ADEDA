@@ -6,12 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/errors/error401.html'
         return
     }
+    
+    let fileInput = document.querySelector('#upload-file')
 
     document.querySelector('#import-btn').addEventListener('click', (ev) => {
-        let input = document.querySelector('#upload-file')
-        input.click()
-
-        loadTable(input)
+        fileInput.click()
+    })
+    fileInput.addEventListener('change', (ev) => {
+        loadTable(fileInput)
             .then((houses) => {
                 sessionStorage.setItem('references', JSON.stringify(houses))
                 window.location.href = '/analog'
