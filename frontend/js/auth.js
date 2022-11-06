@@ -17,7 +17,7 @@ export function tryToLogin(login, password) {
             })
             .then((json) => {
                 if (json.error) {
-                    console.log('Error while logging in: \n', json)
+                    console.error('Error while logging in: \n', json)
                     reject()
                 }
                 else {
@@ -26,7 +26,7 @@ export function tryToLogin(login, password) {
                 }
             })
             .catch((reason) => {
-                console.log('Error while logging in: \n', reason)
+                console.error('Error while logging in: \n', reason)
                 reject()
             })
     })
