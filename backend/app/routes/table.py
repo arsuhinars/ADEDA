@@ -39,7 +39,7 @@ def parse_house_table(file: bytes = File()):
             # Сегмент дома
             if type(row[2].value) is not str:
                 raise ParseError(
-                    f'Unable to parse house segment at {row[2].coordinate}'
+                    f'Unable to parse house segment'
                 )
 
             match row[2].value.strip().lower():
@@ -51,13 +51,13 @@ def parse_house_table(file: bytes = File()):
                     segment = HouseSegment.OLD
                 case _:
                     raise ParseError(
-                        f'Unable to parse house segment at {row[2].coordinate}'
+                        f'Unable to parse house segment'
                     )
             
             # Материал стен
             if type(row[4].value) is not str:
                 raise ParseError(
-                    f'Unable to parse wall material at {row[4].coordinate}'
+                    f'Unable to parse wall material'
                 )
             
             match row[4].value.strip().lower():
@@ -69,13 +69,13 @@ def parse_house_table(file: bytes = File()):
                     material = HouseMaterial.MONOLIT
                 case _:
                     raise ParseError(
-                        f'Unable to parse wall material at {row[4].coordinate}'
+                        f'Unable to parse wall material'
                     )
             
             # Наличие балкона/лоджии
             if type(row[8].value) is not str:
                 raise ParseError(
-                    f'Unable to parse balcony at {row[8].coordinate}'
+                    f'Unable to parse balcony'
                 )
             
             match row[8].value.strip().lower():
@@ -85,13 +85,13 @@ def parse_house_table(file: bytes = File()):
                     has_balcony = False
                 case _:
                     raise ParseError(
-                        f'Unable to parse balcony at {row[8].coordinate}'
+                        f'Unable to parse balcony'
                     )
             
             # Состояние дома
             if type(row[10].value) is not str:
                 raise ParseError(
-                    f'Unable to parse house state at {row[10].coordinate}'
+                    f'Unable to parse house state'
                 )
             
             match row[10].value.strip().lower():
@@ -103,7 +103,7 @@ def parse_house_table(file: bytes = File()):
                     state = HouseState.MODERN_DECORATION
                 case _:
                     raise ParseError(
-                        f'Unable to parse house state at {row[10].coordinate}'
+                        f'Unable to parse house state'
                     )
 
             # Кол-во комнат
@@ -114,7 +114,7 @@ def parse_house_table(file: bytes = File()):
                     rooms_count = int(row[1].value)
                 except ValueError:
                     raise ParseError(
-                        f'Unable to parse rooms count at {row[1].coordinate}'
+                        f'Unable to parse rooms count'
                     )
 
             try:
