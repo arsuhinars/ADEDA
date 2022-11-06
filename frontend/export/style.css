@@ -41,7 +41,17 @@ header{
     font-weight: 400;
     font-size: 25px;
     line-height: 29px;
-    color: #FFFFFF;  
+    color: #FFFFFF;
+   
+}
+
+a{
+    align-items: stretch;
+    color: #FFFFFF;
+    font-family: 'Raleway', sans-serif;
+    font-size: 23px;
+    text-decoration: none !important;
+border: none !important;
 }
 .podpis{
 position: absolute;
