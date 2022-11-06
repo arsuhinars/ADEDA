@@ -22,6 +22,12 @@ Python, FastAPI, SQLAlchemy, Selenium, openpyxl и др.
 5. Пользователь при необходимости изменяет корректировки или выключает их
 6. Экспортирует полученный результат как Excel таблицу
 
+# Скриншоты
+<img src="https://user-images.githubusercontent.com/36979003/200189092-bfde4de6-ab49-4aeb-82af-c28c624f6872.png" width="450"> <img src="https://user-images.githubusercontent.com/36979003/200188998-1c604d84-72a8-47f6-9a37-98b73d4a0b67.png" width="450">
+<img src="https://user-images.githubusercontent.com/36979003/200189064-792e1f2f-867d-4a41-8533-46412b4fbc6f.png" width="450"> <img src="https://user-images.githubusercontent.com/36979003/200189139-6c19c80e-83ab-4ae6-87e1-9a29bc6200c0.png" width="450">
+<img src="https://user-images.githubusercontent.com/36979003/200189125-1ef1794d-4e27-4d28-b94f-a70e3e4d5c76.png" width="450">
+
+
 # Ручная установка
 1. Скопируйте репозиторий. Для этого введите в терминале следующую команду:
 
