@@ -1,25 +1,20 @@
-window.onload=()=>{
-    const uploadFile=document.getElementById("upload-file");
-   // const uploadImp=document.getElementById("import-btn");
-    const uploadBtn=document.getElementById("import-btn");
-    const uploadText=document.getElementById("upload-text");
+import { checkAuthorization } from "../js/auth.js"
+import { loadTable } from "../js/ref_house.js"
 
-    uploadBtn.addEventListener("click",function(){
-    uploadFile.click();
+document.addEventListener('DOMContentLoaded', () => {
+    if (!checkAuthorization()) {
+        window.location.href = '/errors/error401.html'
+        return
+    }
 
-    });
-    let uploded=true;
-    let podpis="Файл не загружен";
-    uploadFile.addEventListener("change",function(){
-if(uploadFile.value){
-    uploadText.innerText=uploadFile.value.match(/[\/\\]([\w\d\s\.\-(\)]+)$/)[1];
-}
-
-else {
-    uploadText.innerText=podpis;
-    uploded=false;
-}
-console.log(uploded);
-    });
-
-}
+    document.querySelector('#import-btn').addEventListener('click', (ev) => {
+        loadTable(document.querySelector('#upload-file'))
+            .then((houses) => {
+                sessionStorage.setItem('references', JSON.stringify(houses))
+                window.location.href = '/analog'
+            })
+            .catch(() => {
+                alert('Произошла ошибка при импорте таблицы')
+            })
+    })
+})

@@ -39,6 +39,7 @@ $(document).ready(function() {
         ).then(() => {
             window.location.href = '/import'
         }).catch(() => {
+            alert('Произошла ошибка при авторизации. Возможно введен неверный пароль или логин')
             $(".overlay").fadeToggle("fast");
         })
 
