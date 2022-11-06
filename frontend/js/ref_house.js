@@ -21,13 +21,13 @@ export function loadTable(fileInput) {
             return response.json()
         }).then((json) => {
             if (json.error) {
-                console.error('Error while loading table: \n', json)
+                console.error('Error occured while loading table: \n', json)
                 reject()
             } else {
                 resolve(json)
             }
         }).catch((reason) => {
-            console.error('Error while loading table: \n', reason)
+            console.error('Error occured while loading table: \n', reason)
             reject()
         })
     })

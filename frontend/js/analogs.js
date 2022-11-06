@@ -37,7 +37,7 @@ export class AnalogSearcher {
             
             if (response.error) {
                 if (typeof(this.onError) == 'function') {
-                    console.error('Error while analog searching: \n', response)
+                    console.error('Error occured while analog searching: \n', response)
                     this.onError()
                 }
             } else {
@@ -52,7 +52,7 @@ export class AnalogSearcher {
             }
         }
         this.ws.onerror = (error) => {
-            console.error('Error while analog searching: \n', error)
+            console.error('Error occured while analog searching: \n', error)
         }
     }
 }
