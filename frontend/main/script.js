@@ -1,9 +1,13 @@
-import { tryToLogin } from "../js/auth.js"
+import { tryToLogin, checkAuthorization} from "../js/auth.js"
 
 $(document).ready(function() {
     $("#loginLink").click(function( event ){
            event.preventDefault();
            $(".overlay").fadeToggle("fast");
+
+            if (checkAuthorization()) {
+                window.location.href = '/import'
+            }
      });
 
     $(".overlayLink").click(function(event){
