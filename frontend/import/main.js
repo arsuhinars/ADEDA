@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTable(fileInput)
             .then((houses) => {
                 sessionStorage.setItem('references', JSON.stringify(houses))
-                window.location.href = '/analog'
+                window.location.href = '/etalon'
             })
             .catch(() => {
                 alert('Произошла ошибка при импорте таблицы')
