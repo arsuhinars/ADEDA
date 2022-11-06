@@ -1,7 +1,7 @@
 window.onload=()=>{
     const uploadFile=document.getElementById("upload-file");
    // const uploadImp=document.getElementById("import-btn");
-    const uploadBtn=document.getElementById("upload-btn");
+    const uploadBtn=document.getElementById("import-btn");
     const uploadText=document.getElementById("upload-text");
 
     uploadBtn.addEventListener("click",function(){
