@@ -1,3 +1,5 @@
+import { tryToLogin } from "../js/auth.js"
+
 $(document).ready(function() {
     $("#loginLink").click(function( event ){
            event.preventDefault();
@@ -23,4 +25,19 @@ $(document).ready(function() {
             $(".overlay").fadeToggle("fast");
         }
     });
+
+    document.querySelector('#login-form').addEventListener('submit', (ev) => {
+        let formData = new FormData(ev.target)
+
+        tryToLogin(
+            formData.get('login'),
+            formData.get('password')
+        ).then(() => {
+            window.location.href = '/import'
+        }).catch(() => {
+            $(".overlay").fadeToggle("fast");
+        })
+
+        ev.preventDefault()
+    })
 });
